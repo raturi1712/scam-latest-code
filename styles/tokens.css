@@ -1,0 +1,131 @@
+/*
+ * ScamShield AI design tokens: "Hybrid Cybersecurity Command Centre".
+ *
+ * One semantic token set, two themes:
+ *   :root / [data-theme="light"]   premium light theme: white surfaces, grey panels, dark text
+ *   [data-theme="dark"]            dark navy command centre
+ * The theme is set on <html> by the inline script in app/layout.js (saved choice, else system
+ * preference). `.theme-dark` forces the dark palette on one region, for showcase panels that are
+ * meant to stay dark in both themes (the sample report, the auth side panel).
+ *
+ * Components only ever reference these semantic tokens (via the Tailwind names mapped in
+ * app/globals.css), so the same Button, Card or Field renders correctly in either theme.
+ */
+:root {
+  /* Surfaces */
+  --ss-canvas: #f8fafc;
+  --ss-surface: #ffffff;
+  --ss-surface-2: #f1f5f9;
+  --ss-sidebar: #ffffff;
+  --ss-hover: rgb(15 23 42 / 0.045);
+  --ss-line: #e2e8f0;
+  --ss-line-strong: #cbd5e1;
+
+  /* Text */
+  --ss-fg: #0f172a;
+  --ss-muted: #64748b;
+  --ss-subtle: #94a3b8;
+
+  /* Brand */
+  --ss-primary: #2563eb;
+  --ss-primary-hover: #1d4ed8;
+  --ss-primary-soft: #eff6ff;
+  --ss-primary-ink: #1d4ed8;
+  --ss-accent: #0891b2;
+  --ss-accent-soft: #ecfeff;
+
+  /* Check status (pass / warn / fail). Solid for dots and bars, -fg for text, -soft for fills. */
+  --ss-success: #22c55e;
+  --ss-success-fg: #15803d;
+  --ss-success-soft: #f0fdf4;
+  --ss-warning: #f59e0b;
+  --ss-warning-fg: #b45309;
+  --ss-warning-soft: #fffbeb;
+  --ss-danger: #ef4444;
+  --ss-danger-fg: #b91c1c;
+  --ss-danger-soft: #fef2f2;
+
+  /* Risk levels: an ordinal status scale, validated for colour-blind separation on both surfaces.
+     Always paired with a text label and icon, never colour alone. */
+  --ss-risk-safe: #34d399;
+  --ss-risk-safe-fg: #047857;
+  --ss-risk-safe-soft: #ecfdf5;
+  --ss-risk-low: #fbbf24;
+  --ss-risk-low-fg: #a16207;
+  --ss-risk-low-soft: #fefce8;
+  --ss-risk-suspicious: #f97316;
+  --ss-risk-suspicious-fg: #c2410c;
+  --ss-risk-suspicious-soft: #fff7ed;
+  --ss-risk-high: #e11d48;
+  --ss-risk-high-fg: #be123c;
+  --ss-risk-high-soft: #fff1f2;
+  /* Legacy alias kept for LEVEL_STYLE in lib/scoring/levels.js. */
+  --ss-risk-high-text: #ffffff;
+
+  /* Depth: soft, layered shadows */
+  --ss-shadow-xs: 0 1px 2px 0 rgb(15 23 42 / 0.05);
+  --ss-shadow-sm: 0 1px 3px 0 rgb(15 23 42 / 0.06), 0 1px 2px -1px rgb(15 23 42 / 0.05);
+  --ss-shadow: 0 4px 16px -4px rgb(15 23 42 / 0.08), 0 2px 4px -2px rgb(15 23 42 / 0.05);
+  --ss-shadow-lg: 0 24px 48px -16px rgb(15 23 42 / 0.18), 0 8px 16px -8px rgb(15 23 42 / 0.08);
+  --ss-ring: rgb(37 99 235 / 0.35);
+
+  /* Typography */
+  --ss-font-sans: var(--font-inter), "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ss-font-mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
+
+  /* Layout */
+  --ss-sidebar-width: 16.5rem;
+  --ss-topbar-height: 4rem;
+  --ss-content-max: 80rem;
+
+  color-scheme: light;
+}
+
+[data-theme="dark"],
+.theme-dark {
+  --ss-canvas: #0b1120;
+  --ss-surface: #172338;
+  --ss-surface-2: #1e2d44;
+  --ss-sidebar: #111b2e;
+  --ss-hover: rgb(255 255 255 / 0.045);
+  --ss-line: #22324b;
+  --ss-line-strong: #2f4362;
+
+  --ss-fg: #f8fafc;
+  --ss-muted: #94a3b8;
+  --ss-subtle: #64748b;
+
+  --ss-primary: #3b82f6;
+  --ss-primary-hover: #2563eb;
+  --ss-primary-soft: rgb(59 130 246 / 0.14);
+  --ss-primary-ink: #93c5fd;
+  --ss-accent: #22d3ee;
+  --ss-accent-soft: rgb(34 211 238 / 0.12);
+
+  --ss-success: #22c55e;
+  --ss-success-fg: #4ade80;
+  --ss-success-soft: rgb(34 197 94 / 0.12);
+  --ss-warning: #f59e0b;
+  --ss-warning-fg: #fbbf24;
+  --ss-warning-soft: rgb(245 158 11 / 0.12);
+  --ss-danger: #ef4444;
+  --ss-danger-fg: #f87171;
+  --ss-danger-soft: rgb(239 68 68 / 0.12);
+
+  --ss-risk-safe-fg: #6ee7b7;
+  --ss-risk-safe-soft: rgb(52 211 153 / 0.12);
+  --ss-risk-low-fg: #fcd34d;
+  --ss-risk-low-soft: rgb(251 191 36 / 0.12);
+  --ss-risk-suspicious-fg: #fdba74;
+  --ss-risk-suspicious-soft: rgb(249 115 22 / 0.13);
+  --ss-risk-high-fg: #fda4af;
+  --ss-risk-high-soft: rgb(225 29 72 / 0.16);
+
+  --ss-shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --ss-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.35);
+  --ss-shadow: 0 8px 24px -12px rgb(0 0 0 / 0.55);
+  --ss-shadow-lg: 0 24px 48px -16px rgb(0 0 0 / 0.65);
+  --ss-ring: rgb(59 130 246 / 0.45);
+
+  color-scheme: dark;
+}

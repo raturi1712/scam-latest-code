@@ -1,0 +1,68 @@
+rules_version = '2';
+
+// ScamShield AI Firestore security rules.
+//
+// Design: the browser may only touch the signed-in user's own data. Scans and reports
+// are written by the server (Firebase Admin SDK, which bypasses these rules) after it has
+// verified the caller's ID token, so clients can never forge a score or write on behalf
+// of another user. There are no admin roles in this version.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    // --- users/{uid}: one profile document per account ---
+    match /users/{uid} {
+      allow get: if isOwner(uid);
+      allow list: if false;
+
+      allow create: if isOwner(uid) && validProfile() && request.resource.data.createdAt == request.time;
+
+      // uid, email and createdAt can never be changed after creation.
+      allow update: if isOwner(uid)
+        && validProfile()
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.get('createdAt', null) == resource.data.get('createdAt', null);
+
+      allow delete: if false;
+
+      function validProfile() {
+        let data = request.resource.data;
+        return data.keys().hasOnly(['uid', 'email', 'displayName', 'photoURL', 'createdAt', 'updatedAt'])
+          && data.uid == request.auth.uid
+          && data.email == request.auth.token.email
+          && data.displayName is string
+          && data.displayName.size() <= 60
+          && (data.photoURL == null || (data.photoURL is string && data.photoURL.size() <= 2048))
+          && data.updatedAt == request.time;
+      }
+    }
+
+    // --- scans/{scanId}: scan history ---
+    // Created only by the server. Owners may read and delete their own records.
+    match /scans/{scanId} {
+      allow get: if signedIn() && resource.data.userId == request.auth.uid;
+      allow list: if signedIn() && resource.data.userId == request.auth.uid && request.query.limit <= 200;
+      allow delete: if signedIn() && resource.data.userId == request.auth.uid;
+      allow create, update: if false;
+    }
+
+    // --- reports/{reportId}: public suspicious-website reports ---
+    // Written only by the server, after validation, rate limiting and bot checks.
+    // Not readable from any client.
+    match /reports/{reportId} {
+      allow read, write: if false;
+    }
+
+    // Everything else is denied.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

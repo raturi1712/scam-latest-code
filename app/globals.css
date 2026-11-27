@@ -1,0 +1,247 @@
+@import "tailwindcss";
+@import "../styles/tokens.css";
+
+/* `dark:` follows the active theme (and any region forced dark with .theme-dark). */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *, .theme-dark, .theme-dark *));
+
+/* Map design tokens onto Tailwind utilities (bg-surface, text-muted, border-line, shadow-card ...). */
+@theme inline {
+  --color-canvas: var(--ss-canvas);
+  --color-surface: var(--ss-surface);
+  --color-surface-2: var(--ss-surface-2);
+  --color-sidebar: var(--ss-sidebar);
+  --color-hover: var(--ss-hover);
+  --color-line: var(--ss-line);
+  --color-line-strong: var(--ss-line-strong);
+
+  --color-fg: var(--ss-fg);
+  --color-muted: var(--ss-muted);
+  --color-subtle: var(--ss-subtle);
+
+  --color-primary: var(--ss-primary);
+  --color-primary-hover: var(--ss-primary-hover);
+  --color-primary-soft: var(--ss-primary-soft);
+  --color-primary-ink: var(--ss-primary-ink);
+  --color-accent: var(--ss-accent);
+  --color-accent-soft: var(--ss-accent-soft);
+
+  --color-success: var(--ss-success);
+  --color-success-fg: var(--ss-success-fg);
+  --color-success-soft: var(--ss-success-soft);
+  --color-warning: var(--ss-warning);
+  --color-warning-fg: var(--ss-warning-fg);
+  --color-warning-soft: var(--ss-warning-soft);
+  --color-danger: var(--ss-danger);
+  --color-danger-fg: var(--ss-danger-fg);
+  --color-danger-soft: var(--ss-danger-soft);
+
+  --color-risk-safe: var(--ss-risk-safe);
+  --color-risk-low: var(--ss-risk-low);
+  --color-risk-suspicious: var(--ss-risk-suspicious);
+  --color-risk-high: var(--ss-risk-high);
+
+  --font-sans: var(--ss-font-sans);
+  --font-mono: var(--ss-font-mono);
+
+  --shadow-card: var(--ss-shadow-sm);
+  --shadow-raised: var(--ss-shadow);
+  --shadow-pop: var(--ss-shadow-lg);
+}
+
+@layer base {
+  html {
+    background: var(--ss-canvas);
+    color: var(--ss-fg);
+    font-family: var(--ss-font-sans);
+    font-feature-settings: "cv11", "ss01";
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* A short colour cross-fade while the theme switches. Only colours, never layout. */
+  html[data-theme-switching] *,
+  html[data-theme-switching] *::before,
+  html[data-theme-switching] *::after {
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease,
+      fill 0.2s ease,
+      stroke 0.2s ease !important;
+  }
+
+  body {
+    min-height: 100dvh;
+    background: var(--ss-canvas);
+    color: var(--ss-fg);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-weight: 650;
+    line-height: 1.2;
+    letter-spacing: -0.018em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ss-primary);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: rgb(59 130 246 / 0.25);
+  }
+
+  button,
+  [role="button"],
+  summary {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+}
+
+@layer components {
+  /* Small section label. Used sparingly: one per section, never as decoration. */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--ss-primary);
+  }
+
+  /* Faint technical grid for hero and auth backgrounds. */
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, rgb(148 163 184 / 0.14) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(148 163 184 / 0.14) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+
+  /* Indeterminate scan bar: a light sweeping across the track. Honest: it shows activity, not fake progress. */
+  .scan-sweep {
+    position: relative;
+    overflow: hidden;
+  }
+  .scan-sweep::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, var(--ss-accent), transparent);
+    animation: ss-sweep 1.6s ease-in-out infinite;
+  }
+
+  .fade-up {
+    animation: ss-fade-up 0.4s ease-out both;
+  }
+
+  /* Native scrollbars that match the dark surfaces. */
+  [data-theme="dark"] ::-webkit-scrollbar,
+  .theme-dark ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  [data-theme="dark"] ::-webkit-scrollbar-thumb,
+  .theme-dark ::-webkit-scrollbar-thumb {
+    background: #22324b;
+    border-radius: 999px;
+    border: 2px solid #0b1120;
+  }
+  [data-theme="dark"] ::-webkit-scrollbar-track,
+  .theme-dark ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+@keyframes ss-sweep {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(250%);
+  }
+}
+
+@keyframes ss-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes ss-pulse-ring {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  html,
+  body,
+  [data-theme="dark"],
+  .theme-dark {
+    --ss-canvas: #ffffff;
+    --ss-surface: #ffffff;
+    --ss-surface-2: #f1f5f9;
+    --ss-line: #e2e8f0;
+    --ss-fg: #0f172a;
+    --ss-muted: #475569;
+    background: #ffffff !important;
+    color: #0f172a !important;
+  }
+  .print-full {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+  }
+  .print-open {
+    display: block !important;
+  }
+  article,
+  section {
+    break-inside: avoid;
+  }
+  * {
+    box-shadow: none !important;
+  }
+}
