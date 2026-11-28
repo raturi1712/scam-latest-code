@@ -43,7 +43,7 @@ export function ScanForm({
       autoCapitalize="none"
       autoCorrect="off"
       spellCheck={false}
-      placeholder="Paste a link, e.g. example.com or https://example.com/page"
+      placeholder="Paste a link or domain"
       value={value}
       onChange={(event) => {
         setValue(event.target.value);

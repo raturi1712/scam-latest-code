@@ -114,10 +114,11 @@ function lookupState(check, data, registered, reason) {
 
 /** Age bands for the small age scale. Informational only: a band says how old, never how trustworthy. */
 export const AGE_BANDS = [
-  { id: "new", label: "Under 30 days", max: 30 },
-  { id: "young", label: "Under 1 year", max: 365 },
-  { id: "established", label: "1 to 5 years", max: 1826 },
-  { id: "old", label: "5+ years", max: Infinity },
+  // `short` is shown on phones, where four full labels do not fit side by side.
+  { id: "new", label: "Under 30 days", short: "< 30 days", max: 30 },
+  { id: "young", label: "Under 1 year", short: "< 1 yr", max: 365 },
+  { id: "established", label: "1 to 5 years", short: "1–5 yrs", max: 1826 },
+  { id: "old", label: "5+ years", short: "5+ yrs", max: Infinity },
 ];
 
 export function ageBandIndex(ageDays) {

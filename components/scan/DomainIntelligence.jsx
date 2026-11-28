@@ -37,7 +37,8 @@ function AgeScale({ ageDays }) {
       <div className="mt-1.5 flex gap-1 text-[0.625rem] leading-tight text-subtle">
         {AGE_BANDS.map((band, index) => (
           <span key={band.id} className={cn("flex-1 truncate", index === active ? "font-semibold text-fg" : "")}>
-            {band.label}
+            <span className="sm:hidden">{band.short || band.label}</span>
+            <span className="hidden sm:inline">{band.label}</span>
           </span>
         ))}
       </div>
